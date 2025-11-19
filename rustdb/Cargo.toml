@@ -2,5 +2,11 @@
 name = "rustdb"
 version = "0.1.0"
 edition = "2024"
+default-run = "rustdb"
 
 [dependencies]
+clap = { version = "4", features = ["derive"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+comfy-table = "7"
+anyhow = "1.0"
+chrono = "0.4"
