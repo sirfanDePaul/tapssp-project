@@ -19,6 +19,18 @@ pub enum Commands {
 
         /// SQL query to run
         sql: String,
+
+        /// Optional CSV output
+        #[clap(long)]
+        csv: Option<String>,
+
+        /// Optional JSON output
+        #[clap(long)]
+        json: Option<String>,
+
+        /// Optional explain flag
+        #[clap(long)]
+        explain: bool,
     },
 
     /// Analyze a database table (schema, row count, etc.)
