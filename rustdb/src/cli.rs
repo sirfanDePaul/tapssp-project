@@ -31,6 +31,10 @@ pub enum Commands {
         /// Optional explain flag
         #[clap(long)]
         explain: bool,
+
+        /// Optional profile flag
+        #[clap(long)]
+        profile: bool,
     },
 
     /// Analyze a database table (schema, row count, etc.)
@@ -41,4 +45,9 @@ pub enum Commands {
         /// Table name to analyze
         table: String,
     },
+
+    /// Starts a Tui window
+    Tui {
+        db_path: String,
+    }
 }

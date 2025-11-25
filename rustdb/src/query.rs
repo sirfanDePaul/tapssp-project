@@ -1,8 +1,9 @@
 use rusqlite::{Connection, Result};
 use comfy_table::{Table, presets::UTF8_FULL};
-use crate::export::{export_to_csv, export_to_json};
+use crate::export::{export_to_csv, export_to_json, save_benchmark_log};
 use serde::Serialize;
 use anyhow::Result as AnyResult;
+
 
 #[derive(Serialize)]
 struct RowRecord {
@@ -10,11 +11,11 @@ struct RowRecord {
 }
 
 /// Runs a SQL query and prints results in a formatted table, optionally export CSV/JSON
-pub fn run_query(db_path: &str, sql: &str, csv_file: Option<&str>, json_file: Option<&str>, explain: bool) -> AnyResult<()> {
+pub fn run_query(db_path: &str, sql: &str, csv_file: Option<&str>, json_file: Option<&str>, explain: bool, profile: bool) -> AnyResult<()> {
     let conn = Connection::open(db_path)?;
 
     if explain {
-        // Run EXPLAIN QUERY PLAN
+        // Run explain query plan
         let mut stmt = conn.prepare(&format!("EXPLAIN QUERY PLAN {}", sql))?;
         let rows_iter = stmt.query_map([], |row| {
             Ok((
@@ -36,6 +37,13 @@ pub fn run_query(db_path: &str, sql: &str, csv_file: Option<&str>, json_file: Op
         println!("{table}");
         return Ok(()); // Skip normal query execution
     }
+
+    // Start profile query plan
+    let start_time = if profile {
+        Some(std::time::Instant::now())
+    } else {
+        None
+    };
 
     let mut stmt = conn.prepare(sql)?;
 
@@ -75,6 +83,17 @@ pub fn run_query(db_path: &str, sql: &str, csv_file: Option<&str>, json_file: Op
     if let Some(file) = json_file {
         export_to_json(file, &rows)?;
         println!("Exported to JSON: {}", file);
+    }
+
+    // End profile query
+    if let Some(start) = start_time {
+        let elapsed = start.elapsed();
+        println!(
+            "Query executed in: {:.4} ms",
+            elapsed.as_secs_f64() * 1000.0
+        );
+        // Writes timing to benchmark.json
+        save_benchmark_log(sql, elapsed)?;
     }
 
     Ok(())
