@@ -14,11 +14,36 @@ Create a lightweight, fast, and reliable command-line interface (CLI) for databa
 
 ### Features:
 - Run SQL queries directly from the terminal
-- Display query results in a formatted table
+- Display query results in a formatted CSV table
 - Analyze database tables (schema info, row counts, data types)
 - Query plan explanation (--explain)
-- Cross-platform
-- Built using safe concurrency, ownership, and well-structured Rust APIs
+- Interactive TUI Mode (SQL Editor)
+
+### Interactive TUI
+- Navigate with keyboard in a clean terminal interface
+- Input SQL queries and see results immediately
+- Press 'q' to quit
+
+### Query Execution
+- Supports all standard SQL queries (SELECT, INSERT, UPDATE, DELETE, etc.)
+- Displays results in a table-like format
+- Handles NULLs, BLOBs, and empty result sets 
+
+### Saved Queries
+- Press 'F2' to view saved queries
+- Type the number associated with a saved query to load it into the input field
+- Save queries with 'Ctrl+S':
+    - Prompted to enter a name for the query
+    - Saved queries are sent to 'saved_queries.json'
+
+### Autocomplete
+- Dynamically suggests SQL keywords and saved query names as you type
+- Press 'Tab' to autofill the first suggestion
+
+### Navigating and Editing
+- Use 'Backspace' to delete characters
+- Use 'Esc' to cancel saving/selection screens
+- Supports multi-case input for both SQL and saved query names
 
 ## Usage
 ### Basic Query
@@ -61,6 +86,30 @@ cargo run -- query <database> "<SQL_QUERY>" --explain
 
 Dispays SQLite's query plan for the provided SQL statement.
 
+## Launch TUI
+
+rustdb tui my.db
+
+In the TUI:
+- Type to enter SQL
+- Enter -> Execute
+- q -> Quit
+
+
+## Saving a Query
+
+- Type your query
+    'SELECT * FROM users;'
+- Press 'Ctrl+S'
+- Enter a name for the query and press 'Enter'
+
+## Loading a Saved Query:
+
+- Press 'F2' to show saved queries
+- Type the number corresponding to the saved query
+- Press 'Enter' to autofill it into the input field
+
+
 ## Installation
 ### 1. Clone the repository:
 
@@ -79,8 +128,15 @@ cargo build --release
 - serde and serde_json: JSON serialization
 - csv: CSV export
 - anyhow: Error handling
+- crossterm: for terminal input/output
+- ratatui: for TUI rendering
 
 ## Notes
 - CSV and JSON export files are not tracked by Git (.gitignore should include *.csv and *.json).
 - Ensure Rust and Cargo are installed and updated
 - Compatible with SQLite databases only (at the moment).
+
+## Future Features
+### Some future features that could be added:
+- Cycle through autocomplete suggestions with arrow keys
+- Query history navigation

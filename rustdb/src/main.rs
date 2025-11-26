@@ -3,6 +3,7 @@ mod query;
 mod analyze;
 mod export;
 mod tui;
+mod saved_queries;
 
 use clap::Parser;
 use cli::{Cli, Commands};
