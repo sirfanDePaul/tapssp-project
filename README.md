@@ -140,3 +140,7 @@ cargo build --release
 ### Some future features that could be added:
 - Cycle through autocomplete suggestions with arrow keys
 - Query history navigation
+
+## Video Demonstration (Loom)
+Part 1: https://www.loom.com/share/1c6d7abda5194e83bee72ca67734e6a4 (5 min)
+Part 2: https://www.loom.com/share/caa8c71141ca4fb2a9e9e0bad8a2d7fc (2:12 min)
